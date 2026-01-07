@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-
+import axios from "axios"
+import { toast } from 'react-toastify';
 const Login = () => {
 
   const [state, setState] = useState('Sign Up')
-
+  const [token, setToken] = useState('');
   const [email, setEmail] = useState('')
   const [password, setpassword] = useState('')
   const [name, setName] = useState('')
@@ -11,11 +12,39 @@ const Login = () => {
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
+    if (state === "Sign Up") {
+      try {
+        const { data } = await axios.post("http://localhost:5000/api/user/signup", { name, email, password });
+        if (data.success) {
+          localStorage.setItem("token", data.token);
+          setToken(data.token);
+          toast.success("SignUp Sucess");
+          console.log("donnee")
+        }
+      }
+      catch {
+        console.log("maacuhd gyi signup mai");
+      }
+    }
+     if (state === "Login") {
+      try {
+        const { data } = await axios.post("http://localhost:5000/api/user/login", { email, password });
+        if (data.success) {
+          localStorage.setItem("token", data.token);
+          setToken(data.token);
+          toast.success("login Sucess");
+          console.log("donnee")
+        }
+      }
+      catch {
+        console.log("maacuhd gyi login mai");
+      }
+    }
 
 
   }
   return (
-    <form className='min-h-[80vh] flex items-center'>
+    <form onSubmit={onSubmitHandler} className='min-h-[80vh] flex items-center'>
       <div className='flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-96 border rounded-xl text-zinc-600 text-sm shadow-lg'>
         <p className='text-2xl font-semibold'>{state === 'Sign Up' ? "Create Account" : "Login"}</p>
         <p>Please {state === 'Sign Up' ? "sign up" : "login"} up to book appointment</p>
@@ -28,13 +57,13 @@ const Login = () => {
 
         <div className='w-full'>
           <p>Email </p>
-          <input className='border border-zinc-300 rounded w-full p-2 mt-1' type="text" onChange={(e) => { setEmail(e.target.value) }} value={email} required />
+          <input className='border border-zinc-300 rounded w-full p-2 mt-1' type="email" onChange={(e) => { setEmail(e.target.value) }} value={email} required />
         </div>
         <div className='w-full'>
           <p>Password </p>
-          <input className='border border-zinc-300 rounded w-full p-2 mt-1' type="text" onChange={(e) => { setpassword(e.target.value) }} value={password} required />
+          <input className='border border-zinc-300 rounded w-full p-2 mt-1' type="password" onChange={(e) => { setpassword(e.target.value) }} value={password} required />
         </div>
-        <button className='bg-primary text-white w-full py-2 rounded-md text-base'>{state === 'Sign Up' ? "Create Account" : "Login"}</button>
+        <button type='submit' className='bg-primary text-white w-full py-2 rounded-md text-base'>{state === 'Sign Up' ? "Create Account" : "Login"}</button>
         {
           state === 'Sign Up' ? <p>Already have an account? <span onClick={() => { setState('Login') }} className='text-primary cursor-pointer underline'>Login here</span> </p>
             : <p>Create an new account?<span onClick={() => { setState('Sign Up') }} className='text-primary cursor-pointer underline'> click here</span></p>
