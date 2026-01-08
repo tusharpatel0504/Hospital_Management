@@ -1,14 +1,23 @@
 import React, { useState } from 'react'
 import axios from "axios"
 import { toast } from 'react-toastify';
+import { useContext } from 'react';
+import { AppContext } from '../context/AppContext';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 const Login = () => {
-
+  const navigate = useNavigate();
   const [state, setState] = useState('Sign Up')
-  const [token, setToken] = useState('');
+  const {token,setToken} = useContext(AppContext);
   const [email, setEmail] = useState('')
   const [password, setpassword] = useState('')
   const [name, setName] = useState('')
-
+  useEffect(()=>{
+    if(token)
+    {
+      navigate("/")
+    }
+  },[token]);
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
@@ -19,11 +28,11 @@ const Login = () => {
           localStorage.setItem("token", data.token);
           setToken(data.token);
           toast.success("SignUp Sucess");
-          console.log("donnee")
+          console.log("done")
         }
       }
       catch {
-        console.log("maacuhd gyi signup mai");
+        console.log("error in signup");
       }
     }
      if (state === "Login") {
@@ -33,11 +42,11 @@ const Login = () => {
           localStorage.setItem("token", data.token);
           setToken(data.token);
           toast.success("login Sucess");
-          console.log("donnee")
+          console.log("done")
         }
       }
       catch {
-        console.log("maacuhd gyi login mai");
+        console.log("error in login");
       }
     }
 
