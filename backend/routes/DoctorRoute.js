@@ -1,15 +1,25 @@
 import express from "express";
 import {
-	docLogin,
-	getCurrentDoc,
-	UpdateDocProfile,
-} from "../controllers/DoctorController.js";
+  doctorList,
+  loginDoctor,
+  appointmentsDoctor,
+  appointmentComplete,
+  appointmentCancel,
+  doctorDashboard,
+  doctorProfile,
+  updateDoctorProfile,
+} from "../controllers/doctorController.js";
 import authDoctor from "../middlewares/authDoctor.js";
-import upload from "../middlewares/multer.js";
-const DoctorRoute = express.Router();
 
-DoctorRoute.post("/login",docLogin);
-DoctorRoute.get("/currentDoc", authDoctor, getCurrentDoc);
-DoctorRoute.put("/update-profile", authDoctor, upload.single("DocImage"), UpdateDocProfile);
+const doctorRouter = express.Router();
 
-export default DoctorRoute;
+doctorRouter.get("/list", doctorList);
+doctorRouter.post("/login", loginDoctor);
+doctorRouter.get("/appointments", authDoctor, appointmentsDoctor);
+doctorRouter.post("/complete-appointment", authDoctor, appointmentComplete);
+doctorRouter.post("/cancel-appointment", authDoctor, appointmentCancel);
+doctorRouter.get("/dashboard", authDoctor, doctorDashboard);
+doctorRouter.get("/profile", authDoctor, doctorProfile);
+doctorRouter.post("/update-profile", authDoctor, updateDoctorProfile);
+
+export default doctorRouter;

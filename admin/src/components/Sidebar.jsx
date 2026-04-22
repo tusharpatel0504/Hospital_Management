@@ -1,16 +1,16 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
+import { AdminContext } from "../context/AdminContext";
 import { NavLink } from "react-router-dom";
-import { assets } from "../assets/assets_admin/assets";
-import { useSelector } from "react-redux";
-
+import { assets } from "../assets/assets";
+import { DoctorContext } from "../context/DoctorContext";
 
 const Sidebar = () => {
-   const { userData } = useSelector(state => state.user)
-   console.log(userData)
+  const { aToken } = useContext(AdminContext);
+  const { dToken } = useContext(DoctorContext);
 
   return (
     <div className="min-h-screen bg-white border-r">
-      {userData && userData.role === 'admin' && (
+      {aToken && (
         <ul className="text-[#515151] mt-5">
           <NavLink
             className={({ isActive }) =>
@@ -62,7 +62,7 @@ const Sidebar = () => {
         </ul>
       )}
 
-      {userData && userData.role === 'doctor' && (
+      {dToken && (
         <ul className="text-[#515151] mt-5">
           <NavLink
             className={({ isActive }) =>

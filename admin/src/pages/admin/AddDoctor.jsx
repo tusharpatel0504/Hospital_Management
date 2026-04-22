@@ -1,7 +1,8 @@
 import React, { useContext, useState } from "react";
+import { assets } from "../../assets/assets";
+import { AdminContext } from "../../context/AdminContext";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { assets } from "../../assets/assets_admin/assets";
 
 const AddDoctor = () => {
   const [docImg, SetDocImg] = useState(false);
@@ -16,7 +17,7 @@ const AddDoctor = () => {
   const [address1, SetAddress1] = useState("");
   const [address2, SetAddress2] = useState("");
 
-  // const { backendUrl, aToken } = useContext(AdminContext);
+  const { backendUrl, aToken } = useContext(AdminContext);
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
@@ -28,17 +29,17 @@ const AddDoctor = () => {
 
       const formData = new FormData();
 
-      formData.append("DocImage", docImg);
-      formData.append("DocName", name);
-      formData.append("DocEmail", email);
-      formData.append("Docpass", password);
-      formData.append("DocExperience", experience);
-      formData.append("DocFee", Number(fees));
-      formData.append("Docabout", about);
-      formData.append("DocSpecility", speciality);
-      formData.append("DocEducation", degree);
+      formData.append("image", docImg);
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("experience", experience);
+      formData.append("fees", Number(fees));
+      formData.append("about", about);
+      formData.append("speciality", speciality);
+      formData.append("degree", degree);
       formData.append(
-        "Docaddress",
+        "address",
         JSON.stringify({ line1: address1, line2: address2 })
       );
 
@@ -48,8 +49,9 @@ const AddDoctor = () => {
       });
 
       const { data } = await axios.post(
-        "http://localhost:5000/api/admin/add-doctor",
+        backendUrl + "/api/admin/add-doctor",
         formData,
+        { headers: { aToken } }
       );
 
       if (data.success) {
